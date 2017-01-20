@@ -1,14 +1,26 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-import httplib
-import json
 import sys
-import re
+
 import curses
+import requests
 import locale
+import re
+
 from datetime import datetime
-from HTMLParser import HTMLParser
+from json import loads
+
+# Teletekst baseURL
+TELETEKST = 'http://teletekst-data.nos.nl/json/%s'
+
+# Tested with python2.7 and python3.5
+PY3K = False
+if sys.version_info.major == 3:
+    PY3K = True
+    from html.parser import HTMLParser
+else:
+    from HTMLParser import HTMLParser
 
 tt_re = re.compile(u'([\U0000f020-\U0000f100])')
 locale.setlocale(locale.LC_ALL, '')
@@ -28,37 +40,32 @@ tt_to_br = {
 }
 
 colors_fg = {
-    'red': 1,
-    'green': 2,
-    'yellow': 3,
-    'blue': 4,
-    'magenta': 5,
-    'cyan': 6,
-    'white': 7,
+    'blue': curses.COLOR_BLUE,
+    'cyan': curses.COLOR_CYAN,
+    'green': curses.COLOR_GREEN,
+    'magenta': curses.COLOR_MAGENTA,
+    'red': curses.COLOR_RED,
+    'white': curses.COLOR_WHITE,
+    'yellow': curses.COLOR_YELLOW,
 }
 
 colors_bg = {
-    'bg-red': 1,
-    'bg-green': 2,
-    'bg-yellow': 3,
-    'bg-blue': 4,
-    'bg-magenta': 5,
-    'bg-cyan': 6,
-    'bg-white': 7,
+    'bg-blue': colors_fg.get('blue'),
+    'bg-cyan': colors_fg.get('cyan'),
+    'bg-green': colors_fg.get('green'),
+    'bg-magenta': colors_fg.get('magenta'),
+    'bg-red': colors_fg.get('red'),
+    'bg-white': colors_fg.get('white'),
+    'bg-yellow': colors_fg.get('yellow'),
 }
 
 
 def load(page):
-    conn = httplib.HTTPConnection("teletekst-data.nos.nl")
-    conn.request("GET", "/json/" + str(page))
-    r = conn.getresponse()
-    data = {}
-
-    if r.status == 200:
-        data = json.loads(r.read())
-
-    conn.close()
-    return data
+    response = requests.get(TELETEKST % page)
+    if not response.status_code == 200:
+        return {}
+    content = loads(response.content.decode('utf-8'))
+    return content
 
 
 def braille_graph(c):
@@ -69,12 +76,16 @@ def braille_graph(c):
     for v in tt_to_br:
         if n & v:
             m = m | tt_to_br[v]
+    if PY3K:
+        return chr(0x2800 + m)
     return unichr(0x2800 + m)
 
 
 def fix_chars(l):
     l = html.unescape(l)
     l = tt_re.sub(braille_graph, l)
+    if PY3K:
+        return l
     return l.encode('utf-8')
 
 
@@ -130,7 +141,6 @@ def show(scr, p):
             except:
                 pass
             y = y + 1
-        return p
 
 
 def main(scr):
@@ -150,7 +160,7 @@ def main(scr):
         page = sys.argv[1]
 
     for i in range(1, 64):
-        curses.init_pair(i, (i % 8), i/8)
+        curses.init_pair(i,(i % 8), int(i/8))
 
     p = load(page)
 
