@@ -172,6 +172,8 @@ def main(scr):
 
         if c == ord('q'):
             break
+        if c == ord('g'):
+            page_next = '100'
         if c == curses.KEY_DOWN or c == ord('j') or c == ord(','):
             page_next = p['prevSubPage']
         if c == curses.KEY_UP or c == ord('k') or c == ord('.'):
