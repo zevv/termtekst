@@ -7,6 +7,7 @@ import sys
 import re
 import curses
 import locale
+from datetime import datetime
 from HTMLParser import HTMLParser
 
 fixer = re.compile(u'([\U0000f020-\U0000f100])')
@@ -99,6 +100,8 @@ def show(scr, p):
         ls = p['content'].split('\n')
         y = 0
         for l in ls:
+            scr.attrset(0)
+            scr.addstr(0, 3, datetime.now().strftime('%H:%M:%S'))
             try:
                 scr.move(y, 0)
                 show_line(scr, fix_chars(l))
