@@ -10,10 +10,22 @@ import locale
 from datetime import datetime
 from HTMLParser import HTMLParser
 
-fixer = re.compile(u'([\U0000f020-\U0000f100])')
+tt_re = re.compile(u'([\U0000f020-\U0000f100])')
 locale.setlocale(locale.LC_ALL, '')
 
 html = HTMLParser()
+
+# Map teletext graphics (2x3) to braille (2x4)
+#
+#  01 02      01 08
+#  04 08 ==>  02 10
+#  10 20      04 20
+#             40 80
+
+tt_to_br = {
+    0x01: 0x01, 0x02: 0x08, 0x04: 0x06,
+    0x08: 0x30, 0x10: 0x40, 0x20: 0x80,
+}
 
 colors_fg = {
     'red': 1,
@@ -53,13 +65,16 @@ def braille_graph(c):
     n = ord(c.group(1)) - 0xf020
     if n >= 64:
         n = n - 32
-    n = (n & 33) | (n & 2) << 2 | (n & 4) >> 1 | (n & 8) << 1 | (n & 16) >> 2
-    return unichr(0x2800 + n)
+    m = 0
+    for v in tt_to_br:
+        if n & v:
+            m = m | tt_to_br[v]
+    return unichr(0x2800 + m)
 
 
 def fix_chars(l):
     l = html.unescape(l)
-    l = fixer.sub(braille_graph, l)
+    l = tt_re.sub(braille_graph, l)
     return l.encode('utf-8')
 
 
