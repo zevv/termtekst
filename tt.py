@@ -97,8 +97,11 @@ def show(scr, page):
         ls = p['content'].split('\n')
         y = 0
         for l in ls:
-            scr.move(y, 0)
-            show_line(scr, fix_chars(l))
+            try:
+                scr.move(y, 0)
+                show_line(scr, fix_chars(l))
+            except:
+                pass
             y = y + 1
         return p
 
