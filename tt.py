@@ -10,7 +10,7 @@ import locale
 from HTMLParser import HTMLParser
 
 fixer = re.compile(u'([\U0000f020-\U0000f100])')
-locale.setlocale(locale.LC_ALL, '')  
+locale.setlocale(locale.LC_ALL, '')
 
 html = HTMLParser()
 
@@ -34,6 +34,7 @@ colors_bg = {
     'bg-white': 7,
 }
 
+
 def load(page):
     conn = httplib.HTTPConnection("teletekst-data.nos.nl")
     conn.request("GET", "/json/" + str(page))
@@ -49,8 +50,10 @@ def load(page):
 
 def braille_graph(c):
     n = ord(c.group(1)) - 0xf020
-    if n >= 64: n = n - 32
-    return unichr(0x2800 + (n&33) | (n&2)<<2 | (n&4)>>1 | (n&8)<<1 | (n&16)>>2)
+    if n >= 64:
+        n = n - 32
+    n = (n & 33) | (n & 2) << 2 | (n & 4) >> 1 | (n & 8) << 1 | (n & 16) >> 2
+    return unichr(0x2800 + n)
 
 
 def fix_chars(l):
@@ -120,12 +123,12 @@ def main(scr):
 
     if len(sys.argv) > 1:
         page = sys.argv[1]
-    
+
     for i in range(1, 64):
-        curses.init_pair(i, i%8, i/8)
+        curses.init_pair(i, (i % 8), i/8)
 
     p = load(page)
-    
+
     while True:
 
         show(scr, p)
@@ -142,11 +145,16 @@ def main(scr):
         else:
             ticks_idle = 0
 
-        if c == ord('q'): break
-        if c == curses.KEY_DOWN  or c == ord('j'): page_next = p['prevSubPage']
-        if c == curses.KEY_UP    or c == ord('k'): page_next = p['nextSubPage']
-        if c == curses.KEY_LEFT  or c == ord('h'): page_next = p['prevPage']
-        if c == curses.KEY_RIGHT or c == ord('l'): page_next = p['nextPage']
+        if c == ord('q'):
+            break
+        if c == curses.KEY_DOWN or c == ord('j'):
+            page_next = p['prevSubPage']
+        if c == curses.KEY_UP or c == ord('k'):
+            page_next = p['nextSubPage']
+        if c == curses.KEY_LEFT or c == ord('h'):
+            page_next = p['prevPage']
+        if c == curses.KEY_RIGHT or c == ord('l'):
+            page_next = p['nextPage']
         if c >= ord('0') and c <= ord('9'):
             page_user = page_user + chr(c)
             if len(page_user) == 3:
@@ -156,12 +164,12 @@ def main(scr):
         if page_next and len(page_next) > 0:
             page = page_next
             page_next = None
-            scr.addstr( 9, 12, "               ")
+            scr.addstr(9,  12, "               ")
             scr.addstr(10, 12, "    Loading    ")
             scr.addstr(11, 12, "               ")
             scr.refresh()
             p = load(page)
-            
+
 
 curses.wrapper(main)
 
