@@ -90,9 +90,8 @@ def show_line(scr, l):
     parser.feed(l)
 
 
-def show(scr, page):
+def show(scr, p):
     scr.erase()
-    p = load(page)
     if 'content' in p:
         ls = p['content'].split('\n')
         y = 0
@@ -124,10 +123,13 @@ def main(scr):
     
     for i in range(1, 64):
         curses.init_pair(i, i%8, i/8)
+
+    p = load(page)
     
     while True:
 
-        p = show(scr, page)
+        show(scr, p)
+
         if len(page_user) > 0:
             scr.addstr(0, 36, page_user + '   ')
 
@@ -153,6 +155,12 @@ def main(scr):
 
         if page_next and len(page_next) > 0:
             page = page_next
+            page_next = None
+            scr.addstr( 9, 12, "               ")
+            scr.addstr(10, 12, "    Loading    ")
+            scr.addstr(11, 12, "               ")
+            scr.refresh()
+            p = load(page)
             
 
 curses.wrapper(main)
