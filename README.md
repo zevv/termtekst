@@ -11,12 +11,12 @@ Usage: tt.py [page]
 Key mappings:
 
 ````
-left / j  : prev
-right / l : next
-up / j    : prev sub page
-down /k   : next sub page
-[0-9]     : enter page number
-q         : quit
+left / j / [  : prev
+right / l / ] : next
+up / j / ,    : prev sub page
+down / k / .  : next sub page
+[0-9]         : enter page number
+q             : quit
 ````
 
 ![Demo](/tt.png)

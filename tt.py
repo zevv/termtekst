@@ -172,13 +172,13 @@ def main(scr):
 
         if c == ord('q'):
             break
-        if c == curses.KEY_DOWN or c == ord('j'):
+        if c == curses.KEY_DOWN or c == ord('j') or c == ord(','):
             page_next = p['prevSubPage']
-        if c == curses.KEY_UP or c == ord('k'):
+        if c == curses.KEY_UP or c == ord('k') or c == ord('.'):
             page_next = p['nextSubPage']
-        if c == curses.KEY_LEFT or c == ord('h'):
+        if c == curses.KEY_LEFT or c == ord('h') or c == ord('['):
             page_next = p['prevPage']
-        if c == curses.KEY_RIGHT or c == ord('l'):
+        if c == curses.KEY_RIGHT or c == ord('l') or c == ord(']'):
             page_next = p['nextPage']
         if c >= ord('0') and c <= ord('9'):
             page_user = page_user + chr(c)
