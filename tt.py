@@ -96,7 +96,14 @@ def show_line(scr, l):
                             self.fg = colors_fg[c]
                         if c in colors_bg:
                             self.bg = colors_bg[c]
-            scr.attrset(curses.color_pair(self.fg + self.bg*8) + curses.A_BOLD)
+
+            attr = 0
+            if self.bg > 0:
+                attr = curses.color_pair(self.fg*8 + self.bg) + curses.A_REVERSE
+            else:
+                attr = curses.color_pair(self.bg*8 + self.fg)
+
+            scr.attrset(attr + curses.A_BOLD)
 
         def handle_endtag(self, tag):
             pass
