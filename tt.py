@@ -50,13 +50,13 @@ colors_fg = {
 }
 
 colors_bg = {
-    'bg-blue': colors_fg.get('blue'),
-    'bg-cyan': colors_fg.get('cyan'),
-    'bg-green': colors_fg.get('green'),
-    'bg-magenta': colors_fg.get('magenta'),
-    'bg-red': colors_fg.get('red'),
-    'bg-white': colors_fg.get('white'),
-    'bg-yellow': colors_fg.get('yellow'),
+    'bg-blue': curses.COLOR_BLUE,
+    'bg-cyan': curses.COLOR_CYAN,
+    'bg-green': curses.COLOR_GREEN,
+    'bg-magenta': curses.COLOR_MAGENTA,
+    'bg-red': curses.COLOR_RED,
+    'bg-white': curses.COLOR_WHITE,
+    'bg-yellow': curses.COLOR_YELLOW,
 }
 
 
