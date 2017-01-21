@@ -182,8 +182,22 @@ def main(scr):
 
         if c == ord('q'):
             break
-        if c == ord('g'):
+        if c == ord('g') or c == ord('!'):
             page_next = '100'
+        if c == ord('@'):
+            page_next = '200'
+        if c == ord('#'):
+            page_next = '300'
+        if c == ord('$'):
+            page_next = '400'
+        if c == ord('%'):
+            page_next = '500'
+        if c == ord('^'):
+            page_next = '600'
+        if c == ord('&'):
+            page_next = '700'
+        if c == ord('*'):
+            page_next = '800'
         if c == curses.KEY_DOWN or c == ord('j') or c == ord(','):
             page_next = p['prevSubPage']
         if c == curses.KEY_UP or c == ord('k') or c == ord('.'):
