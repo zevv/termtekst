@@ -148,6 +148,7 @@ def main(scr):
     curses.noecho()
     curses.cbreak()
     curses.halfdelay(1)
+    curses.mousemask(1)
     curses.start_color()
     curses.curs_set(0)
 
@@ -175,11 +176,16 @@ def main(scr):
 
         if c == -1:
             ticks_idle = ticks_idle + 1
-            if ticks_idle == 5:
+            if ticks_idle == 20:
                 page_user = ''
         else:
             ticks_idle = 0
 
+        if c == curses.KEY_MOUSE:
+            b, x, y, _, _ = curses.getmouse()
+            if b == 0:
+                for c in re.finditer("(\d{3})", scr.instr(y, x-3, 5)):
+                    page_next = c.group(1)
         if c == ord('q'):
             break
         if c == ord('g') or c == ord('!'):
