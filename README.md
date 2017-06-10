@@ -6,9 +6,9 @@ console. The original teletext font includes 2x6 raster graphics glyphs which
 have no representation in unicode; as a workaround the braille set is abused to
 approximate the graphics.
 
-Pages are retreived from NOS over HTTP (in JSON format).
+Pages are retrieved from NOS over HTTP (in JSON format).
 
-Usage: tt.py [page]
+Usage: `tt.py [page]`
 
 Key mappings:
 
