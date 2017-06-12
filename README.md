@@ -30,5 +30,14 @@ down  / k / . : next sub page
 q             : quit
 ````
 
+Shortcut keys can be configured in ~/.ttrc, example file:
+
+````
+[bookmarks]
+w = 704
+g = 100
+i = 100
+````
+
 ![Demo](/tt.png)
 
