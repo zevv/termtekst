@@ -6,6 +6,8 @@ console. The original Teletekst font includes 2x6 raster graphics glyphs which
 have no representation in unicode; as a workaround the braille set is abused to
 approximate the graphics.
 
+![Demo](/tt.png)
+
 Pages are retrieved from NOS over HTTP (in JSON format).
 
 Installation:
@@ -39,5 +41,4 @@ g = 100
 i = 100
 ````
 
-![Demo](/tt.png)
 
