@@ -10,18 +10,31 @@ approximate the graphics.
 
 Pages are retrieved from NOS over HTTP (in JSON format).
 
-Installation:
+
+### Installation
 
 ```
 sudo python ./setup.py install
 ```
 
-Usage:
+or simply run the script straight from the checked out git source:
+
+```
+./src/tt
+```
+
+### Usage
+
+Termtekst takes an optional start page number as single argument, or defaults to page 100 if not specified:
 
 ```
 tt [page]
 ```
-Key mappings:
+
+Choos the page to view using number keys, browse using arrow keys or vim-style navigation (h,j,k,l), or click
+on page numbers with the mouse.
+
+### Key mappings
 
 ````
 left  / h / [ : prev
@@ -31,6 +44,8 @@ down  / k / . : next sub page
 [0-9]         : enter page number
 q             : quit
 ````
+
+### Configuration
 
 Shortcut keys can be configured in ~/.ttrc, example file:
 
