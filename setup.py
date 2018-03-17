@@ -20,7 +20,7 @@ try:
     author_email = "github@zevv.nl",
     url = "https://github.com/zevv/termtekst",
     keywords = ["teletekst", "terminal"],
-    install_requires = [],
+    install_requires = ["requests"],
     classifiers = [],
     scripts=["src/tt"],
     include_package_data = True
