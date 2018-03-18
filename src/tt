@@ -7,7 +7,6 @@ import requests
 import locale
 import re
 import os
-import ConfigParser
 
 from datetime import datetime
 from json import loads
@@ -21,8 +20,10 @@ PY3K = False
 if sys.version_info.major == 3:
     PY3K = True
     from html.parser import HTMLParser
+    import configparser as ConfigParser
 else:
     from HTMLParser import HTMLParser
+    import ConfigParser
 
 tt_re = re.compile(u'([\U0000f020-\U0000f100])')
 locale.setlocale(locale.LC_ALL, '')
