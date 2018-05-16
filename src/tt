@@ -17,15 +17,18 @@ TTRC = os.path.expanduser('~/.ttrc')
 
 # Tested with python2.7 and python3.5
 PY3K = False
+double_width = False
 if sys.version_info.major == 3:
     PY3K = True
     from html.parser import HTMLParser
     import configparser as ConfigParser
+    unichr = chr
 else:
     from HTMLParser import HTMLParser
     import ConfigParser
 
 tt_re = re.compile(u'([\U0000f020-\U0000f100])')
+wc_re = re.compile(u'([\U00000020-\U0000007f])')
 locale.setlocale(locale.LC_ALL, '')
 
 html = HTMLParser()
@@ -41,6 +44,11 @@ tt_to_br = {
     0x01: 0x03, 0x02: 0x18, 0x04: 0x06,
     0x08: 0x30, 0x10: 0x44, 0x20: 0xa0,
 }
+
+tt_to_br_wide = [
+    { 0x01: 0x1b, 0x04: 0x36, 0x10: 0xe4 },
+    { 0x02: 0x1b, 0x08: 0x36, 0x20: 0xe4 },
+]
 
 colors_fg = {
     'blue': curses.COLOR_BLUE,
@@ -77,20 +85,34 @@ def load(page):
 
 def braille_graph(c):
     n = ord(c.group(1)) - 0xf020
-    if n >= 64:
-        n = n - 32
-    m = 0
-    for v in tt_to_br:
-        if n & v:
-            m = m | tt_to_br[v]
-    if PY3K:
-        return chr(0x2800 + m)
-    return unichr(0x2800 + m)
+    if n >= 64: n = n - 32
+    o = ""
+    if double_width:
+        for w in tt_to_br_wide:
+            m = 0
+            for v in w:
+                if n & v: m = m | w[v]
+            o = o + unichr(0x2800 + m)
+    else:
+        m = 0
+        for v in tt_to_br:
+            if n & v: m = m | tt_to_br[v]
+        o = o + unichr(0x2800 + m)
+    return o
+
+
+def double_width_char(c):
+    n = ord(c.group(1))
+    if n >= 0x21 and n <= 0x7f:
+        return unichr(n + 0xff00 - 0x20)
+    else:
+        return "  "
 
 
 def fix_chars(l):
-    l = html.unescape(l)
     l = tt_re.sub(braille_graph, l)
+    if double_width:
+        l = wc_re.sub(double_width_char, l)
     if PY3K:
         return l
     return l.encode('utf-8')
@@ -127,7 +149,7 @@ def show_line(scr, l):
             pass
 
         def handle_data(self, data):
-            scr.addstr(data)
+            scr.addstr(fix_chars(data))
 
     scr.attrset(0)
     parser = Parser()
@@ -144,7 +166,7 @@ def show(scr, p):
             scr.addstr(0, 3, datetime.now().strftime('%H:%M:%S'))
             try:
                 scr.move(y, 0)
-                show_line(scr, fix_chars(l))
+                show_line(scr, html.unescape(l))
             except:
                 pass
             y = y + 1
@@ -201,6 +223,9 @@ def main(scr):
                     page_next = c.group(1)
         if c == ord('q'):
             break
+        if c == ord('d'):
+            global double_width
+            double_width = not double_width
         if c > 0 and c < 255 and chr(c) in bookmarks:
             page_next = bookmarks[chr(c)]
         if c == curses.KEY_DOWN or c == ord('j') or c == ord(','):

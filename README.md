@@ -43,6 +43,7 @@ up    / j / , : prev sub page
 down  / k / . : next sub page
 [0-9]         : enter page number
 q             : quit
+d             : toggle double width
 ````
 
 ### Configuration
