@@ -12,7 +12,7 @@ from datetime import datetime
 from json import loads
 
 # Teletekst baseURL
-TELETEKST = 'http://teletekst-data.nos.nl/json/%s'
+TELETEKST = 'https://teletekst-data.nos.nl/json/%s'
 TTRC = os.path.expanduser('~/.ttrc')
 
 # Tested with python2.7 and python3.5
