@@ -156,7 +156,7 @@ def show_line(scr, l):
     parser.feed(l)
 
 
-def show(scr, p):
+def show(scr, p, page):
     scr.erase()
     if 'content' in p:
         ls = p['content'].split('\n')
@@ -170,6 +170,9 @@ def show(scr, p):
             except:
                 pass
             y = y + 1
+    else:
+        scr.addstr(0, 36, page)
+        scr.addstr(10, 12, " nothing here  ")
 
 
 def main(scr):
@@ -202,7 +205,7 @@ def main(scr):
 
     while True:
 
-        show(scr, p)
+        show(scr, p, page)
 
         if len(page_user) > 0:
             scr.addstr(0, 36, page_user + '   ')
@@ -211,7 +214,7 @@ def main(scr):
 
         if c == -1:
             ticks_idle = ticks_idle + 1
-            if ticks_idle == 20:
+            if ticks_idle == 10:
                 page_user = ''
         else:
             ticks_idle = 0
@@ -229,13 +232,13 @@ def main(scr):
         if c > 0 and c < 255 and chr(c) in bookmarks:
             page_next = bookmarks[chr(c)]
         if c == curses.KEY_DOWN or c == ord('j') or c == ord(','):
-            page_next = p['prevSubPage']
+            page_next = p.get('prevSubPage')
         if c == curses.KEY_UP or c == ord('k') or c == ord('.'):
-            page_next = p['nextSubPage']
+            page_next = p.get('nextSubPage')
         if c == curses.KEY_LEFT or c == ord('h') or c == ord('['):
-            page_next = p['prevPage']
+            page_next = p.get('prevPage')
         if c == curses.KEY_RIGHT or c == ord('l') or c == ord(']'):
-            page_next = p['nextPage']
+            page_next = p.get('nextPage')
         if c >= ord('0') and c <= ord('9'):
             page_user = page_user + chr(c)
             if len(page_user) == 3:
