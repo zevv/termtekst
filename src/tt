@@ -222,8 +222,8 @@ def main(scr):
         if c == curses.KEY_MOUSE:
             b, x, y, _, _ = curses.getmouse()
             if b == 0:
-                for c in re.finditer("(\d{3})", scr.instr(y, x-3, 5)):
-                    page_next = c.group(1)
+                for c2 in re.finditer("(\d{3})", scr.instr(y, x-3, 5).decode()):
+                    page_next = c2.group(1)
         if c == ord('q'):
             break
         if c == ord('d'):
