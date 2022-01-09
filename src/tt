@@ -23,15 +23,17 @@ if sys.version_info.major == 3:
     from html.parser import HTMLParser
     import configparser as ConfigParser
     unichr = chr
+    import html as html_funcs
+    html = HTMLParser()
 else:
     from HTMLParser import HTMLParser
     import ConfigParser
+    html = html_funcs = HTMLParser()
 
 tt_re = re.compile(u'([\U0000f020-\U0000f100])')
 wc_re = re.compile(u'([\U00000020-\U0000007f])')
 locale.setlocale(locale.LC_ALL, '')
 
-html = HTMLParser()
 
 # Map teletext graphics (2x3) to braille (2x4)
 #
@@ -164,11 +166,8 @@ def show(scr, p, page):
         for l in ls:
             scr.attrset(0)
             scr.addstr(0, 3, datetime.now().strftime('%H:%M:%S'))
-            try:
-                scr.move(y, 0)
-                show_line(scr, html.unescape(l))
-            except:
-                pass
+            scr.move(y, 0)
+            show_line(scr, html_funcs.unescape(l))
             y = y + 1
     else:
         scr.addstr(0, 36, page)
