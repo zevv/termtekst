@@ -5,6 +5,7 @@ import sys
 import curses
 import requests
 import locale
+import time
 import re
 import os
 
@@ -14,6 +15,7 @@ from json import loads
 # Teletekst baseURL
 TELETEKST = 'https://teletekst-data.nos.nl/json/%s'
 TTRC = os.path.expanduser('~/.ttrc')
+REFRESH_INTERVAL = 60
 
 # Tested with python2.7 and python3.5
 PY3K = False
@@ -202,6 +204,8 @@ def main(scr):
 
     p = load(page)
 
+    t_refresh = 0
+
     while True:
 
         show(scr, p, page)
@@ -217,6 +221,10 @@ def main(scr):
                 page_user = ''
         else:
             ticks_idle = 0
+
+        if  time.time() > t_refresh:
+            page_next = page
+            t_refresh = time.time() + REFRESH_INTERVAL
 
         if c == curses.KEY_MOUSE:
             b, x, y, _, _ = curses.getmouse()
