@@ -15,7 +15,7 @@ from json import loads
 # Teletekst baseURL
 TELETEKST = 'https://teletekst-data.nos.nl/json/%s'
 TTRC = os.path.expanduser('~/.ttrc')
-REFRESH_INTERVAL = 60
+REFRESH_INTERVAL = 15
 
 # Tested with python2.7 and python3.5
 double_width = False
@@ -215,10 +215,6 @@ def main(scr):
         else:
             ticks_idle = 0
 
-        if  time.time() > t_refresh:
-            page_next = page
-            t_refresh = time.time() + REFRESH_INTERVAL
-
         if c == curses.KEY_MOUSE:
             b, x, y, _, _ = curses.getmouse()
             if b == 0:
@@ -244,13 +240,17 @@ def main(scr):
             if len(page_user) == 3:
                 page_next = page_user
                 page_user = ''
+        if c == 32 or time.time() > t_refresh:
+            if "nextSubPage" in p and p['nextSubPage'] != "":
+                page_next = p['nextSubPage']
+            else:
+                page_next = page[0:3]
+            t_refresh = time.time() + REFRESH_INTERVAL
 
         if page_next and len(page_next) > 0:
             page = page_next
             page_next = None
-            scr.addstr(9,  12, "               ")
-            scr.addstr(10, 12, "    Loading    ")
-            scr.addstr(11, 12, "               ")
+            scr.addstr(0, 36, "***")
             scr.refresh()
             p = load(page)
 
