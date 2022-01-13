@@ -80,7 +80,9 @@ bookmarks = {
 }
 
 def load(page):
-    response = requests.get(TELETEKST % page)
+    # Add time to url to avoid caching
+    url = (TELETEKST % page) + "?" + str(time.time())
+    response = requests.get(url)
     if not response.status_code == 200:
         return {}
     content = loads(response.content.decode('utf-8'))
