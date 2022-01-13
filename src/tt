@@ -214,6 +214,7 @@ def main(scr):
                 page_user = ''
         else:
             ticks_idle = 0
+            t_refresh = time.time() + REFRESH_INTERVAL
 
         if c == curses.KEY_MOUSE:
             b, x, y, _, _ = curses.getmouse()
