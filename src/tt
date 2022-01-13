@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
 import sys
@@ -18,19 +18,12 @@ TTRC = os.path.expanduser('~/.ttrc')
 REFRESH_INTERVAL = 60
 
 # Tested with python2.7 and python3.5
-PY3K = False
 double_width = False
-if sys.version_info.major == 3:
-    PY3K = True
-    from html.parser import HTMLParser
-    import configparser as ConfigParser
-    unichr = chr
-    import html as html_funcs
-    html = HTMLParser()
-else:
-    from HTMLParser import HTMLParser
-    import ConfigParser
-    html = html_funcs = HTMLParser()
+from html.parser import HTMLParser
+import configparser as ConfigParser
+unichr = chr
+import html as html_funcs
+html = HTMLParser()
 
 tt_re = re.compile(u'([\U0000f020-\U0000f100])')
 wc_re = re.compile(u'([\U00000020-\U0000007f])')
@@ -119,9 +112,7 @@ def fix_chars(l):
     l = tt_re.sub(braille_graph, l)
     if double_width:
         l = wc_re.sub(double_width_char, l)
-    if PY3K:
-        return l
-    return l.encode('utf-8')
+    return l
 
 
 def show_line(scr, l):
