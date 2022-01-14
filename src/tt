@@ -15,10 +15,12 @@ from json import loads
 # Teletekst baseURL
 TELETEKST = 'https://teletekst-data.nos.nl/json/%s'
 TTRC = os.path.expanduser('~/.ttrc')
-REFRESH_INTERVAL = 15
+
+opt_nos_font = False
+opt_refresh_interval = 15
+opt_double_width = False
 
 # Tested with python2.7 and python3.5
-double_width = False
 from html.parser import HTMLParser
 import configparser as ConfigParser
 unichr = chr
@@ -86,7 +88,7 @@ def braille_graph(c):
     n = ord(c.group(1)) - 0xf020
     if n >= 64: n = n - 32
     o = ""
-    if double_width:
+    if opt_double_width:
         for w in tt_to_br_wide:
             m = 0
             for v in w:
@@ -109,8 +111,10 @@ def double_width_char(c):
 
 
 def fix_chars(l):
+    if opt_nos_font:
+        return l
     l = tt_re.sub(braille_graph, l)
-    if double_width:
+    if opt_double_width:
         l = wc_re.sub(double_width_char, l)
     return l
 
@@ -174,12 +178,6 @@ def show(scr, p, page):
 
 def main(scr):
 
-    if os.path.isfile(TTRC):
-        p = ConfigParser.SafeConfigParser()
-        p.read(TTRC)
-        for k, v in p.items('bookmarks'):
-            bookmarks[k] = v
-
     curses.noecho()
     curses.cbreak()
     curses.halfdelay(1)
@@ -217,7 +215,7 @@ def main(scr):
                 page_user = ''
         else:
             ticks_idle = 0
-            t_refresh = time.time() + REFRESH_INTERVAL
+            t_refresh = time.time() + opt_refresh_interval
 
         if c == curses.KEY_MOUSE:
             b, x, y, _, _ = curses.getmouse()
@@ -227,8 +225,8 @@ def main(scr):
         if c == ord('q'):
             break
         if c == ord('d'):
-            global double_width
-            double_width = not double_width
+            global opt_double_width
+            opt_double_width = not opt_double_width
         if c > 0 and c < 255 and chr(c) in bookmarks:
             page_next = bookmarks[chr(c)]
         if c == curses.KEY_DOWN or c == ord('j') or c == ord(','):
@@ -249,7 +247,7 @@ def main(scr):
                 page_next = p['nextSubPage']
             else:
                 page_next = page[0:3]
-            t_refresh = time.time() + REFRESH_INTERVAL
+            t_refresh = time.time() + opt_refresh_interval
 
         if page_next and len(page_next) > 0:
             page = page_next
@@ -258,6 +256,15 @@ def main(scr):
             scr.refresh()
             p = load(page)
 
+    
+if os.path.isfile(TTRC):
+    p = ConfigParser.SafeConfigParser()
+    p.read(TTRC)
+    for k, v in p.items('bookmarks'):
+        bookmarks[k] = v
+    opt_nos_font = p.getboolean("options", "nos_font", fallback = False)
+    opt_refresh_interval = p.getint("options", "refresh_interval", fallback = 60)
+    opt_double_width = p.getboolean("options", "double_width", fallback = False)
 
 curses.wrapper(main)
 

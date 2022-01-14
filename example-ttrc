@@ -1,10 +1,27 @@
 
-# This file goes in ~/.trc
+# This file goes in ~/.ttrc
+
+
+[options]
+
+# Set this to 'true' to disable the remapping of graphic
+# teletekst characters to braille fonts
+
+# nos_font: true
+
+# Auto-refresh interval in seconds
+
+# refresh_interval = 15
+
+# Set to 'true' to default to double width characters
+
+# double_width = false
+
 
 [bookmarks]
 
-w = 704
-z = 709
-g = 100
-i = 100
+# Add your private bookmark keys here
+
+# w = 704    'w' for weather
+# b = 102    'b' for binnenland nieuws
 
