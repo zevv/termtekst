@@ -156,14 +156,17 @@ def show_line(scr, l):
 def show(scr, p, page):
     scr.erase()
     if 'content' in p:
-        ls = p['content'].split('\n')
-        y = 0
-        for l in ls:
-            scr.attrset(0)
-            scr.addstr(0, 3, datetime.now().strftime('%H:%M:%S'))
-            scr.move(y, 0)
-            show_line(scr, html_funcs.unescape(l))
-            y = y + 1
+        try:
+            ls = p['content'].split('\n')
+            y = 0
+            for l in ls:
+                scr.attrset(0)
+                scr.addstr(0, 3, datetime.now().strftime('%H:%M:%S'))
+                scr.move(y, 0)
+                show_line(scr, html_funcs.unescape(l))
+                y = y + 1
+        except:
+            return
     else:
         scr.addstr(0, 36, page)
         scr.addstr(10, 12, " nothing here  ")
