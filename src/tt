@@ -198,7 +198,7 @@ def main(scr):
 
     p = load(page)
 
-    t_refresh = 0
+    t_refresh = time.time() + opt_refresh_interval
 
     while True:
 
