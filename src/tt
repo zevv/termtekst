@@ -170,7 +170,7 @@ def show(scr, p, page):
                 show_line(scr, html_funcs.unescape(l))
                 y = y + 1
         except:
-            return
+            pass
     else:
         scr.addstr(0, 36, page)
         scr.addstr(10, 12, " nothing here  ")
@@ -218,10 +218,13 @@ def main(scr):
             t_refresh = time.time() + opt_refresh_interval
 
         if c == curses.KEY_MOUSE:
-            b, x, y, _, _ = curses.getmouse()
-            if b == 0:
-                for c2 in re.finditer("(\d{3})", scr.instr(y, x-3, 5).decode()):
-                    page_next = c2.group(1)
+            try:
+                b, x, y, _, _ = curses.getmouse()
+                if b == 0:
+                    for c2 in re.finditer("(\d{3})", scr.instr(y, x-3, 5).decode()):
+                        page_next = c2.group(1)
+            except:
+                pass
         if c == ord('q'):
             break
         if c == ord('d'):
