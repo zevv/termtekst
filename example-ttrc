@@ -7,7 +7,7 @@
 # Set this to 'true' to disable the remapping of graphic
 # teletekst characters to braille fonts
 
-# nos_font: true
+# nos_font = true
 
 # Auto-refresh interval in seconds
 
