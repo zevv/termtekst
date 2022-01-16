@@ -261,7 +261,7 @@ def main(scr):
 
     
 if os.path.isfile(TTRC):
-    p = ConfigParser.SafeConfigParser()
+    p = ConfigParser.ConfigParser()
     p.read(TTRC)
     for k, v in p.items('bookmarks'):
         bookmarks[k] = v
