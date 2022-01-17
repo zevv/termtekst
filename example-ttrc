@@ -4,17 +4,28 @@
 
 [options]
 
-# Set this to 'true' to disable the remapping of graphic
-# teletekst characters to braille fonts
-
-# nos_font = true
+# Select the character set to use for rendering the teletext graphical
+# characters. 
+# 
+# Valid options are:
+#
+# - "braille" (default): use the unicode braille characters to approximate
+#   the 2x3 graphical characters.
+#
+# - "nos": do not do any character translation - use this when you
+#   installed the NOS teletext font
+#
+# - "block": Approximate the telext graphic characters with symbols from the
+#   "Block Elements" unicode range.
+#
+# charset = "braille"
 
 # Auto-refresh interval in seconds
-
+#
 # refresh_interval = 15
 
 # Set to 'true' to default to double width characters
-
+#
 # double_width = false
 
 

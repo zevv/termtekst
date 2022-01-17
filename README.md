@@ -46,15 +46,18 @@ q             : quit
 d             : toggle double width
 ````
 
+### Fonts
+
+The teletext character set can (at this time) not be properly rendered as there is no valid representation for
+some of the graphical characters in the unicode set. As a workaround, termtekst tries to approximate some
+of these symbols by replacing them with characters from the braille unicode table. For better results,
+install the 
+[NOS teletekst font](https://cdn.nos.nl/assets/nos-symfony/bcea4a1/bundles/nossite/fonts/teletekst/Android_VeraMono.woff)
+on your machine and set the `charset` option to `nos` in your `~/.ttrc`.
+
+
 ### Configuration
 
-Shortcut keys can be configured in ~/.ttrc, example file:
-
-````
-[bookmarks]
-w = 704
-g = 100
-i = 100
-````
-
+Termtekst allows for some basic configuration of bookmarks and rendering options through
+a config file in `~/.ttrc`. Refer to the `example-ttrc` for a list of available options and settings.
 

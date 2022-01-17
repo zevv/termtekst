@@ -101,6 +101,45 @@ def braille_graph(c):
         o = o + unichr(0x2800 + m)
     return o
 
+def block_graph(c):
+    n = ord(c.group(1)) - 0xf020
+    if n >= 64: n = n - 32
+    o = ""
+    m = 0
+    for v in tt_to_br:
+        if n & v: m = m | tt_to_br[v]
+
+    chars = {
+        0:   0x2800,
+        24:  0x259D, # ⠘
+        27:  0x2580, # ⠛
+        54:  0x2580, # ⠶
+        56:  0x259D, # ⠸
+        63:  0x2580, # ⠿
+        68:  0x2596, # ⡄
+        70:  0x258C, # ⡆
+        71:  0x258C, # ⡇
+        95:  0x259B, # ⡟
+        118: 0x259B, # ⡶
+        160: 0x2597, # ⢠
+        167: 0x259A, # ⢧
+        176: 0x2590, # ⢰
+        184: 0x2590, # ⢸
+        187: 0x259C, # ⢻
+        191: 0x259C, # ⢿
+        228: 0x2584, # ⣤
+        231: 0x2599, # ⣧
+        244: 0x2584, # ⣴
+        246: 0x2588, # ⣶
+        247: 0x2588, # ⣷
+        252: 0x259F, # ⣼
+        255: 0x2588, # ⣿
+    }
+
+    o = unichr(chars.get(m, 0x2800 + m))
+
+    return o
+
 
 def double_width_char(c):
     n = ord(c.group(1))
@@ -111,12 +150,17 @@ def double_width_char(c):
 
 
 def fix_chars(l):
-    if opt_nos_font:
+    if opt_charset == "block":
+        return tt_re.sub(block_graph, l)
+    elif opt_charset == "nos":
         return l
-    l = tt_re.sub(braille_graph, l)
-    if opt_double_width:
-        l = wc_re.sub(double_width_char, l)
-    return l
+    elif opt_charset == "braille":
+        l = tt_re.sub(braille_graph, l)
+        if opt_double_width:
+            l = wc_re.sub(double_width_char, l)
+        return l
+    else:
+        return l
 
 
 def show_line(scr, l):
@@ -266,8 +310,10 @@ if os.path.isfile(TTRC):
     for k, v in p.items('bookmarks'):
         bookmarks[k] = v
     opt_nos_font = p.getboolean("options", "nos_font", fallback = False)
+    opt_block_font = p.getboolean("options", "block_font", fallback = False)
     opt_refresh_interval = p.getint("options", "refresh_interval", fallback = 60)
     opt_double_width = p.getboolean("options", "double_width", fallback = False)
+    opt_charset = p.get("options", "charset", fallback = "braille")
 
 curses.wrapper(main)
 
