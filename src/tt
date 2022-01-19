@@ -16,7 +16,7 @@ from json import loads
 TELETEKST = 'https://teletekst-data.nos.nl/json/%s'
 TTRC = os.path.expanduser('~/.ttrc')
 
-opt_nos_font = False
+opt_charset = 'braille'
 opt_refresh_interval = 15
 opt_double_width = False
 
@@ -111,32 +111,51 @@ def block_graph(c):
 
     chars = {
         0:   0x2800,
+        3:   0x2598, # ⠃
+        7:   0x258E, # ⠇
         24:  0x259D, # ⠘
         27:  0x2580, # ⠛
+        30:  0x259E, # ⠞
+        31:  0x259B, # ⠟
+        51:  0x259A, # ⠳
         54:  0x2580, # ⠶
+        55:  0x2599, # ⠷
         56:  0x259D, # ⠸
+        59:  0x259C, # ⠻
         63:  0x2580, # ⠿
         68:  0x2596, # ⡄
         70:  0x258C, # ⡆
         71:  0x258C, # ⡇
+        94:  0x259E, # ⡞
         95:  0x259B, # ⡟
+        116: 0x259E, # ⡴
         118: 0x259B, # ⡶
+        124: 0x259E, # ⡼
+        126: 0x259E, # ⡾
+        127: 0x259B, # ⡿
         160: 0x2597, # ⢠
         167: 0x259A, # ⢧
         176: 0x2590, # ⢰
+        182: 0x259C, # ⢶
         184: 0x2590, # ⢸
         187: 0x259C, # ⢻
+        190: 0x259E, # ⢾
         191: 0x259C, # ⢿
         228: 0x2584, # ⣤
+        230: 0x2599, # ⣦
         231: 0x2599, # ⣧
         244: 0x2584, # ⣴
         246: 0x2588, # ⣶
         247: 0x2588, # ⣷
         252: 0x259F, # ⣼
+        254: 0x259F, # ⣾
         255: 0x2588, # ⣿
     }
 
     o = unichr(chars.get(m, 0x2800 + m))
+
+    if opt_double_width:
+        o += o
 
     return o
 
@@ -150,9 +169,9 @@ def double_width_char(c):
 
 
 def fix_chars(l):
-    if opt_block_font:
+    if opt_charset == 'block':
         l = tt_re.sub(block_graph, l)
-    if opt_nos_font:
+    if opt_charset == 'nos':
         return l
     l = tt_re.sub(braille_graph, l)
     if opt_double_width:
@@ -306,8 +325,7 @@ if os.path.isfile(TTRC):
     p.read(TTRC)
     for k, v in p.items('bookmarks'):
         bookmarks[k] = v
-    opt_nos_font = p.getboolean("options", "nos_font", fallback = False)
-    opt_block_font = p.getboolean("options", "block_font", fallback = False)
+    opt_charset = p.get("options", "charset", fallback = "braille")
     opt_refresh_interval = p.getint("options", "refresh_interval", fallback = 60)
     opt_double_width = p.getboolean("options", "double_width", fallback = False)
 
