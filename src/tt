@@ -241,7 +241,7 @@ def main(scr):
     curses.noecho()
     curses.cbreak()
     curses.halfdelay(1)
-    curses.mousemask(1)
+    curses.mousemask(-1)
     curses.start_color()
     curses.curs_set(0)
 
@@ -279,10 +279,16 @@ def main(scr):
 
         if c == curses.KEY_MOUSE:
             try:
-                b, x, y, _, _ = curses.getmouse()
-                if b == 0:
+                _, x, y, _, b = curses.getmouse()
+
+
+                if b & curses.BUTTON1_CLICKED:
                     for c2 in re.finditer("(\d{3})", scr.instr(y, x-3, 5).decode()):
                         page_next = c2.group(1)
+                if b & 65536:
+                    page_next = p.get('nextPage')
+                if b & 2097152:
+                    page_next = p.get('prevPage')
             except:
                 pass
         if c == ord('q'):
