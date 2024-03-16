@@ -18,6 +18,10 @@
 # - block: Approximate the telext graphic characters with symbols from the
 #   "Block Elements" unicode range.
 #
+# - legacy: Use the teletext graphical characters from the "symbols for
+#   legacy computing" unicode range, introduced in unicode 13. Use this
+#   when you have a recent terminal font that has these glyphs.
+#
 # charset = braille
 
 # Auto-refresh interval in seconds.

@@ -159,6 +159,83 @@ def block_graph(c):
 
     return o
 
+def legacy_graph(c):
+    n = ord(c.group(1)) - 0xf020
+    if n >= 64: n = n - 32
+
+    chars = {
+        0b000000: 0x2800,  # EMPTY
+        0b000001: 0x1FB00, # 🬀 BLOCK SEXTANT 1
+        0b000010: 0x1FB01, # 🬁 BLOCK SEXTANT 2
+        0b000011: 0x1FB02, # 🬂 BLOCK SEXTANT 12
+        0b000100: 0x1FB03, # 🬃 BLOCK SEXTANT 3
+        0b000101: 0x1FB04, # 🬄 BLOCK SEXTANT 13
+        0b000110: 0x1FB05, # 🬅 BLOCK SEXTANT 23
+        0b000111: 0x1FB06, # 🬆 BLOCK SEXTANT 123
+        0b001000: 0x1FB07, # 🬇 BLOCK SEXTANT 4
+        0b001001: 0x1FB08, # 🬈 BLOCK SEXTANT 14
+        0b001010: 0x1FB09, # 🬉 BLOCK SEXTANT 24
+        0b001011: 0x1FB0A, # 🬊 BLOCK SEXTANT 124
+        0b001100: 0x1FB0B, # 🬋 BLOCK SEXTANT 34
+        0b001101: 0x1FB0C, # 🬌 BLOCK SEXTANT 134
+        0b001110: 0x1FB0D, # 🬍 BLOCK SEXTANT 234
+        0b001111: 0x1FB0E, # 🬎 BLOCK SEXTANT 1234
+        0b010000: 0x1FB0F, # 🬏 BLOCK SEXTANT 5
+        0b010001: 0x1FB10, # 🬐 BLOCK SEXTANT 15
+        0b010010: 0x1FB11, # 🬑 BLOCK SEXTANT 25
+        0b010011: 0x1FB12, # 🬒 BLOCK SEXTANT 125
+        0b010100: 0x1FB13, # 🬓 BLOCK SEXTANT 35
+        0b010101: 0x258C,  # ▌ LEFT HALF BLOCK
+        0b010110: 0x1FB14, # 🬔 BLOCK SEXTANT 235
+        0b010111: 0x1FB15, # 🬕 BLOCK SEXTANT 1235
+        0b011000: 0x1FB16, # 🬖 BLOCK SEXTANT 45
+        0b011001: 0x1FB17, # 🬗 BLOCK SEXTANT 145
+        0b011010: 0x1FB18, # 🬘 BLOCK SEXTANT 245
+        0b011011: 0x1FB19, # 🬙 BLOCK SEXTANT 1245
+        0b011100: 0x1FB1A, # 🬚 BLOCK SEXTANT 345
+        0b011101: 0x1FB1B, # 🬛 BLOCK SEXTANT 1345
+        0b011110: 0x1FB1C, # 🬜 BLOCK SEXTANT 2345
+        0b011111: 0x1FB1D, # 🬝 BLOCK SEXTANT 12345
+        0b100000: 0x1FB1E, # 🬞 BLOCK SEXTANT 6
+        0b100001: 0x1FB1F, # 🬟 BLOCK SEXTANT 16
+        0b100010: 0x1FB20, # 🬠 BLOCK SEXTANT 26
+        0b100011: 0x1FB21, # 🬡 BLOCK SEXTANT 126
+        0b100100: 0x1FB22, # 🬢 BLOCK SEXTANT 36
+        0b100101: 0x1FB23, # 🬣 BLOCK SEXTANT 136
+        0b100110: 0x1FB24, # 🬤 BLOCK SEXTANT 236
+        0b100111: 0x1FB25, # 🬥 BLOCK SEXTANT 1236
+        0b101000: 0x1FB26, # 🬦 BLOCK SEXTANT 46
+        0b101001: 0x1FB27, # 🬧 BLOCK SEXTANT 146
+        0b101010: 0x2590,  # ▐ RIGHT HALF BLOCK
+        0b101011: 0x1FB28, # 🬨 BLOCK SEXTANT 1246
+        0b101100: 0x1FB29, # 🬩 BLOCK SEXTANT 346
+        0b101101: 0x1FB2A, # 🬪 BLOCK SEXTANT 1346
+        0b101110: 0x1FB2B, # 🬫 BLOCK SEXTANT 2346
+        0b101111: 0x1FB2C, # 🬬 BLOCK SEXTANT 12346
+        0b110000: 0x1FB2D, # 🬭 BLOCK SEXTANT 56
+        0b110001: 0x1FB2E, # 🬮 BLOCK SEXTANT 156
+        0b110010: 0x1FB2F, # 🬯 BLOCK SEXTANT 256
+        0b110011: 0x1FB30, # 🬰 BLOCK SEXTANT 1256
+        0b110100: 0x1FB31, # 🬱 BLOCK SEXTANT 356
+        0b110101: 0x1FB32, # 🬲 BLOCK SEXTANT 1356
+        0b110110: 0x1FB33, # 🬳 BLOCK SEXTANT 2356
+        0b110111: 0x1FB34, # 🬴 BLOCK SEXTANT 12356
+        0b111000: 0x1FB35, # 🬵 BLOCK SEXTANT 456
+        0b111001: 0x1FB36, # 🬶 BLOCK SEXTANT 1456
+        0b111010: 0x1FB37, # 🬷 BLOCK SEXTANT 2456
+        0b111011: 0x1FB38, # 🬸 BLOCK SEXTANT 12456
+        0b111100: 0x1FB39, # 🬹 BLOCK SEXTANT 3456
+        0b111101: 0x1FB3A, # 🬺 BLOCK SEXTANT 13456
+        0b111110: 0x1FB3B, # 🬻 BLOCK SEXTANT 23456
+        0b111111: 0x2588,  # █ FULL BLOCK
+    }
+
+    o = unichr(chars[n])
+
+    if opt_double_width:
+        o += o
+
+    return o
 
 def double_width_char(c):
     n = ord(c.group(1))
@@ -171,6 +248,8 @@ def double_width_char(c):
 def fix_chars(l):
     if opt_charset == 'block':
         l = tt_re.sub(block_graph, l)
+    if opt_charset == 'legacy':
+        l = tt_re.sub(legacy_graph, l)
     if opt_charset == 'nos':
         return l
     l = tt_re.sub(braille_graph, l)
