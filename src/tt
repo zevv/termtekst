@@ -270,7 +270,7 @@ def show_line(scr, l):
             self.fg = 7
             for attr in attrs:
                 if attr[0] == "class":
-                    for c in re.finditer("(\S+)", attr[1]):
+                    for c in re.finditer(r"(\S+)", attr[1]):
                         c = c.group(1)
                         if c in colors_fg:
                             self.fg = colors_fg[c]
@@ -362,7 +362,7 @@ def main(scr):
 
 
                 if b & curses.BUTTON1_CLICKED:
-                    for c2 in re.finditer("(\d{3})", scr.instr(y, x-3, 5).decode()):
+                    for c2 in re.finditer(r"(\d{3})", scr.instr(y, x-3, 5).decode()):
                         page_next = c2.group(1)
                 if b & 65536:
                     page_next = p.get('nextPage')
