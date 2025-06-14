@@ -17,6 +17,7 @@ TELETEKST = 'https://teletekst-data.nos.nl/json/%s'
 TTRC = os.path.expanduser('~/.ttrc')
 
 opt_charset = 'braille'
+opt_auto_refresh = True
 opt_refresh_interval = 15
 opt_double_width = False
 
@@ -391,10 +392,11 @@ def main(scr):
                 page_next = page_user
                 page_user = ''
         if c == 32 or time.time() > t_refresh:
-            if "nextSubPage" in p and p['nextSubPage'] != "":
-                page_next = p['nextSubPage']
-            else:
-                page_next = page[0:3]
+            if opt_auto_refresh:
+                if "nextSubPage" in p and p['nextSubPage'] != "":
+                    page_next = p['nextSubPage']
+                else:
+                    page_next = page[0:3]
             t_refresh = time.time() + opt_refresh_interval
 
         if page_next and len(page_next) > 0:
@@ -408,9 +410,14 @@ def main(scr):
 if os.path.isfile(TTRC):
     p = ConfigParser.ConfigParser()
     p.read(TTRC)
-    for k, v in p.items('bookmarks'):
-        bookmarks[k] = v
+
+    # RC may contain only options, so check if bookmarks is present first
+    if p.has_section("bookmarks"):
+        for k, v in p.items('bookmarks'):
+            bookmarks[k] = v
+
     opt_charset = p.get("options", "charset", fallback = "braille")
+    opt_auto_refresh = p.getboolean("options", "auto_refresh", fallback = True)
     opt_refresh_interval = p.getint("options", "refresh_interval", fallback = 60)
     opt_double_width = p.getboolean("options", "double_width", fallback = False)
 

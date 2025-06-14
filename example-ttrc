@@ -24,6 +24,11 @@
 #
 # charset = braille
 
+# Toggle auto-refresh functionality, set to 'false' to disable 
+# automatically cycling through sub-pages.
+# 
+# auto_refresh = true
+
 # Auto-refresh interval in seconds.
 #
 # refresh_interval = 15
