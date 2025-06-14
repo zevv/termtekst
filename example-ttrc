@@ -5,7 +5,7 @@
 [options]
 
 # Select the character set to use for rendering the teletext graphical
-# characters. 
+# characters. [default: braille]
 # 
 # Valid options are:
 #
@@ -25,15 +25,15 @@
 # charset = braille
 
 # Toggle auto-refresh functionality, set to 'false' to disable 
-# automatically cycling through sub-pages.
+# automatically cycling through sub-pages. [default: true]
 # 
-# auto_refresh = true
+# auto_cycle = true
 
-# Auto-refresh interval in seconds.
+# Auto-refresh interval in seconds. [default: 60]
 #
 # refresh_interval = 15
 
-# Set to 'true' to default to double width characters.
+# Set to 'true' to default to double width characters. [default: false]
 #
 # double_width = false
 
