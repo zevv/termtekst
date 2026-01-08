@@ -78,11 +78,14 @@ bookmarks = {
 def load(page):
     # Add time to url to avoid caching
     url = (TELETEKST % page) + "?" + str(time.time())
-    response = requests.get(url)
-    if not response.status_code == 200:
-        return {}
-    content = loads(response.content.decode('utf-8'))
-    return content
+    try:
+        response = requests.get(url)
+        if not response.status_code == 200:
+            return {}
+        content = loads(response.content.decode('utf-8'))
+        return content
+    except Exception as e:
+        return { 'content': '\n\n\n       Network error'}
 
 
 def braille_graph(c):
